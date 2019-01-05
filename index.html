@@ -4,53 +4,24 @@
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
-		
-		<title>Movie Review</title>
-
-		<!-- Loading third party fonts -->
+		<title>Tokoflix</title>
 		<link href="http://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">
 		<link href="fonts/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-		<!-- Loading main css file -->
 		<link rel="stylesheet" href="style.css">
-		
-		<!--[if lt IE 9]>
-		<script src="js/ie-support/html5.js"></script>
-		<script src="js/ie-support/respond.js"></script>
-		<![endif]-->
-
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 	</head>
 
-
 	<body>
-		
-
 		<div id="site-content">
 			<header class="site-header">
 				<div class="container">
-					<a href="index.html" id="branding">
+					<a href="#" id="branding">
 						<img src="images/logo.png" alt="" class="logo">
 						<div class="logo-copy">
-							<h1 class="site-title">Company Name</h1>
-							<small class="site-description">Tagline goes here</small>
+							<h1 class="site-title">Tokoflix</h1>
+							<small class="site-description">Legal film for you</small>
 						</div>
 					</a> <!-- #branding -->
-
-					<div class="main-navigation">
-						<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
-						<ul class="menu">
-							<li class="menu-item current-menu-item"><a href="index.html">Home</a></li>
-							<li class="menu-item"><a href="about.html">About</a></li>
-							<li class="menu-item"><a href="review.html">Movie reviews</a></li>
-							<li class="menu-item"><a href="joinus.html">Join us</a></li>
-							<li class="menu-item"><a href="contact.html">Contact</a></li>
-						</ul> <!-- .menu -->
-
-						<form action="#" class="search-form">
-							<input type="text" placeholder="Search...">
-							<button><i class="fa fa-search"></i></button>
-						</form>
-					</div> <!-- .main-navigation -->
 
 					<div class="mobile-navigation"></div>
 				</div>
@@ -58,201 +29,231 @@
 			<main class="main-content">
 				<div class="container">
 					<div class="page">
-						<div class="row">
-							<div class="col-md-9">
-								<div class="slider">
-									<ul class="slides">
-										<li><a href="#"><img src="dummy/slide-1.jpg" alt="Slide 1"></a></li>
-										<li><a href="#"><img src="dummy/slide-2.jpg" alt="Slide 2"></a></li>
-										<li><a href="#"><img src="dummy/slide-3.jpg" alt="Slide 3"></a></li>
-									</ul>
-								</div>
+							<span>
+								Ovo Balance : Rp. <span id="balanceOvo"></span>
+							</span>
+							<div class="breadcrumbs">
+								<!-- <a href="#" id="home">Home</a> -->
+								<!-- <a href="#" id="detailTitle" >Movie Detail</a> -->
 							</div>
-							<div class="col-md-3">
-								<div class="row">
-									<div class="col-sm-6 col-md-12">
-										<div class="latest-movie">
-											<a href="#"><img src="dummy/thumb-1.jpg" alt="Movie 1"></a>
+
+						<div class="movie-list">
+							<div id="render">
+								<div id="movieListRender" style="display:block" class="content">
+								</div>
+
+								<div id="movieDetailRender" style="display:none" class="content">
+									<div class="row">
+										<div class="col-md-6">
+											<figure class="movie-poster"><img src="dummy/single-image.jpg" alt="#"></figure>
+										</div>
+										<div class="col-md-6">
+											<h2 class="movie-title" id="movie-title-detail"></h2>
+											<div class="movie-summary" id="movie-summary-detail"> </div>
+											<ul class="movie-meta">
+												<li><strong>Rating:</strong>
+													<div class="star-rating" ><span style="width:20%" id="movie-star-detail"></span></div>
+												</li>
+												<span style="display:none" id="movie-id-detail"></span>
+												<li><strong>Length:</strong> <span id="movie-min-detail"></span></li>
+												<li><strong>Release:</strong> <span id="movie-release-detail"></span></li>
+												<li><strong>Genre:</strong> <span id="movie-genre-detail"></span></li>
+												<li><strong>Price:</strong><span> Rp.<span> <span id="movie-price-detail"></span></li>
+											</ul>
+											<ul class="movie-meta">
+												<li><button id="buyMovie">BUY</button></li>
+											</ul>
+										</div>
+									</div> <!-- .row -->
+									<div> <!-- recomended div here -->
+										<div class="entry-content">
+											<h1> Rekomendasi </h1>
+											<div id="rekomendasi">
+											</div>
 										</div>
 									</div>
-									<div class="col-sm-6 col-md-12">
-										<div class="latest-movie">
-											<a href="#"><img src="dummy/thumb-2.jpg" alt="Movie 2"></a>
+									<div> <!-- serupa div here -->
+										<div class="entry-content">
+											<h1> Serupa </h1>
+											<div id="serupa">
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</div> <!-- .row -->
-						<div class="row">
-							<div class="col-sm-6 col-md-3">
-								<div class="latest-movie">
-									<a href="#"><img src="dummy/thumb-3.jpg" alt="Movie 3"></a>
-								</div>
-							</div>
-							<div class="col-sm-6 col-md-3">
-								<div class="latest-movie">
-									<a href="#"><img src="dummy/thumb-4.jpg" alt="Movie 4"></a>
-								</div>
-							</div>
-							<div class="col-sm-6 col-md-3">
-								<div class="latest-movie">
-									<a href="#"><img src="dummy/thumb-5.jpg" alt="Movie 5"></a>
-								</div>
-							</div>
-							<div class="col-sm-6 col-md-3">
-								<div class="latest-movie">
-									<a href="#"><img src="dummy/thumb-6.jpg" alt="Movie 6"></a>
-								</div>
-							</div>
-						</div> <!-- .row -->
-						
-						<div class="row">
-							<div class="col-md-4">
-								<h2 class="section-title">December premiere</h2>
-								<p>Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-								<ul class="movie-schedule">
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-								</ul> <!-- .movie-schedule -->
-							</div>
-							<div class="col-md-4">
-								<h2 class="section-title">November premiere</h2>
-								<p>Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-								<ul class="movie-schedule">
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-								</ul> <!-- .movie-schedule -->
-							</div>
-							<div class="col-md-4">
-								<h2 class="section-title">October premiere</h2>
-								<p>Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-								<ul class="movie-schedule">
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-									<li>
-										<div class="date">16/12</div>
-										<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-									</li>
-								</ul> <!-- .movie-schedule -->
-							</div>
-						</div>
+
+							</div> <!-- .movie-list -->
+						</div> <!-- .movie-list -->
 					</div>
 				</div> <!-- .container -->
 			</main>
-			<footer class="site-footer">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-2">
-							<div class="widget">
-								<h3 class="widget-title">About Us</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia tempore vitae mollitia nesciunt saepe cupiditate</p>
-							</div>
-						</div>
-						<div class="col-md-2">
-							<div class="widget">
-								<h3 class="widget-title">Recent Review</h3>
-								<ul class="no-bullet">
-									<li><a href="#">Lorem ipsum dolor</a></li>
-									<li><a href="#">Sit amet consecture</a></li>
-									<li><a href="#">Dolorem respequem</a></li>
-									<li><a href="#">Invenore veritae</a></li>
-								</ul>
-							</div>
-						</div>
-						<div class="col-md-2">
-							<div class="widget">
-								<h3 class="widget-title">Help Center</h3>
-								<ul class="no-bullet">
-									<li><a href="#">Lorem ipsum dolor</a></li>
-									<li><a href="#">Sit amet consecture</a></li>
-									<li><a href="#">Dolorem respequem</a></li>
-									<li><a href="#">Invenore veritae</a></li>
-								</ul>
-							</div>
-						</div>
-						<div class="col-md-2">
-							<div class="widget">
-								<h3 class="widget-title">Join Us</h3>
-								<ul class="no-bullet">
-									<li><a href="#">Lorem ipsum dolor</a></li>
-									<li><a href="#">Sit amet consecture</a></li>
-									<li><a href="#">Dolorem respequem</a></li>
-									<li><a href="#">Invenore veritae</a></li>
-								</ul>
-							</div>
-						</div>
-						<div class="col-md-2">
-							<div class="widget">
-								<h3 class="widget-title">Social Media</h3>
-								<ul class="no-bullet">
-									<li><a href="#">Facebook</a></li>
-									<li><a href="#">Twitter</a></li>
-									<li><a href="#">Google+</a></li>
-									<li><a href="#">Pinterest</a></li>
-								</ul>
-							</div>
-						</div>
-						<div class="col-md-2">
-							<div class="widget">
-								<h3 class="widget-title">Newsletter</h3>
-								<form action="#" class="subscribe-form">
-									<input type="text" placeholder="Email Address">
-								</form>
-							</div>
-						</div>
-					</div> <!-- .row -->
 
-					<div class="colophon">Copyright 2014 Company name, Designed by Themezy. All rights reserved</div>
-				</div> <!-- .container -->
-
-			</footer>
 		</div>
-		<!-- Default snippet for navigation -->
-		
-
 
 		<script src="js/jquery-1.11.1.min.js"></script>
 		<script src="js/plugins.js"></script>
 		<script src="js/app.js"></script>
-		
-	</body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
+		<script>
+		  var globalPage = 0;
+		  var globalUrl = window.location.href;
+		  var key = 'd85fc1ea26d9a03832fb3a7961ac2be1';
+
+			$(document).ready(function() { // default page 1, initialize
+				getMovie(1);
+				globalPage = 2;
+				var originalUrl = localStorage.getItem("originalUrl");
+				var initialBalance = localStorage.getItem("balance") ? localStorage.getItem("balance") : 100000;
+				history.pushState(null, null, originalUrl);
+				localStorage.setItem("originalUrl", window.location.href);
+				localStorage.setItem("balance", initialBalance);
+				var getInitialBalance = localStorage.getItem("balance");
+				updateBalance(getInitialBalance);
+			});
+
+// ===============================
+// ======== Function Here ========
+// ===============================
+
+			function updateBalance(balance) {
+				$("#balanceOvo").text(formatPrice(balance));
+			}
+
+			function generatePrice (rating) {
+				var ret = 0;
+				var pricing = {
+					"3": "3.500",
+					"6": "8.250",
+					"8": "16.350",
+					"10": "21.250",
+				};
+				$.each(pricing, function( index, value ) {
+					if(rating < index) ret = (ret <= 0) ? value : ret;
+				});
+				return ret;
+			}
+
+		  function getMovie (page, clear) { // get movie by page
+		    $.ajax({
+		      method: "GET",
+		      url: 'https://api.themoviedb.org/3/movie/now_playing?api_key='+key+'&language=en-US&page='+page,
+		      data: {}
+		    }).done(function( msg ) {
+		      if(clear) $("#movieDetailRender").css("display", "none");
+					if(clear) $("#movieListRender").empty();
+					$("#movieListRender").css("display", "block");
+		      res = msg.results;
+					$.each(res, function( index, value ) {
+						renderMovie(value, index, 'movieListRender');
+					});
+					localStorage.setItem("stateScreen", "list");
+					var originalUrl = localStorage.getItem("originalUrl");
+					history.pushState(null, null, originalUrl+'?movieListPage='+page);
+		    });
+		  }
+
+		  function detailMovie (clickId) { // go to detail movie
+		    $.ajax({
+		      method: "GET",
+		      url: "https://api.themoviedb.org/3/movie/"+clickId+"?api_key="+key+"&language=en-US",
+		      data: {}
+		    }).done(function( msg ) {
+					var slug = msg.original_title.replace(/ /g,"-");
+					var recomendasiUrl = "https://api.themoviedb.org/3/movie/"+clickId+"/recommendations?api_key="+key+"&language=en-US&page=1"
+					var serupaUrl = "https://api.themoviedb.org/3/movie/"+clickId+"/similar?api_key="+key+"&language=en-US&page=1"
+		      globalPage = 2;
+		      renderDetailMovie(msg);
+					var originalUrl = localStorage.getItem("originalUrl");
+					history.pushState(null, null, originalUrl+'?'+clickId+'-'+slug);
+		    });
+		  }
+
+			function renderMovie (data, key, type) { //render movie list
+				var maxLoad = (type !== "movieListRender") ? 4 : 100;
+				var rating = parseFloat(data.vote_average);
+				var checIsOwned = !checkOwnedMovie(data.id) ? 'block' : 'none';
+					if(key < maxLoad){
+						var linkImg ='https://api.themoviedb.org/3/movie/'+data.id+'/images?api_key='+key+'&language=en-US';
+						var renderMovie =
+							'<div class="movie" id="movieListRender">'+
+								'<figure class="movie-poster">'+
+								'<img src="images/logo.png" alt="Movie Image">'+
+									// '<img src="'+linkImg+'" alt="Movie Image">'+
+								'</figure>'+
+								'<div class="movie-title">'+
+									'<a href="#">'+data.original_title+
+										'<span style="display: none;">'+data.id+'</span>'+
+									'</a><span style="font-size: 15px; color: red; display:'+checIsOwned+'"> owned</span>'+
+								'</div>'+
+								'<p>'+data.overview.substring(0, 100)+'</p>'+
+								'<p> Price : Rp. '+generatePrice(rating)+'</p>'+
+							'</div>';
+						var render = String('"#'+type+'"');
+						$("#"+type).append(renderMovie);
+					}
+			}
+
+			function checkOwnedMovie (id) {
+				var purchaseMovie = localStorage.getItem("purchaseMovie") ? localStorage.getItem("purchaseMovie") : [];
+				var checkPurchase = purchaseMovie.indexOf(id) === -1; // belum pernah beli
+				return checkPurchase;
+			}
+
+		  function renderDetailMovie (data) { //render detail movie
+				var genre = '';
+				localStorage.setItem("stateScreen", "detail");
+				$("#movieListRender").css("display", "none");
+				$("#movieDetailRender").css("display", "block");
+				$("#movie-id-detail").text(data.id);
+				$("#movie-title-detail").text(data.original_title);
+				$("#movie-summary-detail").empty();
+				$("#movie-summary-detail").append("<p>"+data.overview+"</p>");
+				$("#movie-star-detail").css({"width": parseInt(data.vote_average) * 10+"%"});
+				$("#movie-min-detail").text( data.runtime + " min");
+				$("#movie-release-detail").text(data.release_date);
+				$("#movie-price-detail").text(generatePrice(parseFloat(data.vote_average)));
+				(data.genres).forEach(getGenre);
+				function getGenre (val, k) {
+					genre =  genre + ((k === 0 ) ? '': ' /') + val.name ;
+				}
+				$("#movie-genre-detail").text(genre);
+		  }
+
+			function formatPrice (price) {
+				return String(price).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+
+// =================================
+// ======== On click ennevt ========
+// =================================
+
+		  $( "#movieListRender" ).on("click", "a", function() {
+		    var clickId = $(this).children('span').text();
+		    detailMovie(clickId);
+		  });
+
+		  $( "#home" ).on("click", function() {
+		    getMovie(1, true);
+		  });
+
+		  $( "#branding" ).on("click", function() {
+		    getMovie(1, true);
+		  });
+
+// ===================================
+// ======== window envet here ========
+// ===================================
+
+		  $(window).scroll(function() {
+			var stateScreen = localStorage.getItem("stateScreen");
+			if(stateScreen === 'list') {
+			   if($(window).scrollTop() + $(window).height() == $(document).height()) {
+			     getMovie(globalPage);
+			     globalPage = globalPage + 1;
+				   }
+			  }
+			});
+
+		</script>
+	</body>
 </html>
