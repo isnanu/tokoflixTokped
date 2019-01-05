@@ -163,8 +163,24 @@
 					var serupaUrl = "https://api.themoviedb.org/3/movie/"+clickId+"/similar?api_key="+key+"&language=en-US&page=1"
 		      globalPage = 2;
 		      renderDetailMovie(msg);
+					$("#rekomendasi").empty();
+					$("#serupa").empty();
+					otherMovie(recomendasiUrl, "rekomendasi");
+					otherMovie(serupaUrl, "serupa");
 					var originalUrl = localStorage.getItem("originalUrl");
 					history.pushState(null, null, originalUrl+'?'+clickId+'-'+slug);
+		    });
+		  }
+
+		  function otherMovie (url, type) { // go to detail movie
+		    $.ajax({
+		      method: "GET",
+		      url: url,
+		      data: {}
+		    }).done(function( msg ) {
+					$.each(msg.results, function( index, value ) {
+						renderMovie(value, index, type);
+					});
 		    });
 		  }
 
@@ -219,6 +235,32 @@
 				$("#movie-genre-detail").text(genre);
 		  }
 
+			function buyMovie (price) {
+				var getInitialBalance = localStorage.getItem("balance");
+				var newBalance = parseInt(getInitialBalance) - parseInt(price.split('.').join(""));
+
+				if(newBalance > 0) {
+					moviePurchase(newBalance);
+				} else {
+					alert('Not enought balance')
+				}
+			}
+
+			function moviePurchase (newBalance) {
+				var id = $("#movie-id-detail").text();
+				var purchaseMovie = localStorage.getItem("purchaseMovie") ? localStorage.getItem("purchaseMovie") : [];
+				var checkPurchase = purchaseMovie.indexOf(id) === -1; // belum pernah beli
+				if (checkPurchase) {
+					var newPurchase = [purchaseMovie, id];
+					localStorage.setItem("balance", newBalance);
+					localStorage.setItem("purchaseMovie", newPurchase);
+					updateBalance(newBalance);
+					alert('Payment success, your balance now Rp. ' + formatPrice(newBalance))
+				} else {
+					alert('You have buy this movie')
+				}
+			}
+
 			function formatPrice (price) {
 				return String(price).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			}
@@ -232,6 +274,11 @@
 		    detailMovie(clickId);
 		  });
 
+			$( "#movieDetailRender" ).on("click", "a", function() {
+		    var clickId = $(this).children('span').text();
+		    detailMovie(clickId);
+		  });
+
 		  $( "#home" ).on("click", function() {
 		    getMovie(1, true);
 		  });
@@ -239,6 +286,29 @@
 		  $( "#branding" ).on("click", function() {
 		    getMovie(1, true);
 		  });
+
+			$( "#buyMovie" ).on("click", function() {
+				var getInitialBalance = localStorage.getItem("balance");
+				var title = $("#movie-title-detail").text();
+				var price = $("#movie-price-detail").text();
+				$.confirm({
+				    title: 'Buy Movie',
+				    content:
+							'<div style="padding-top:20px">'+
+							'<p><b>Title : </b>'+title+'<p>'+
+							'<p><b>Balance : Rp. </b>'+formatPrice(getInitialBalance)+'<p>'+
+							'<p><b>Price : Rp. </b>'+price+'<p>'+
+							'</div>'
+						,
+				    buttons: {
+				        confirm: function () {
+									buyMovie(price);
+				        },
+				        cancel: function () {
+				        },
+				    }
+				});
+			});
 
 // ===================================
 // ======== window envet here ========
