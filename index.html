@@ -31,19 +31,21 @@
 				<div class="container" id="render">
 					<div class="page">
 						<div class="row">
-							<div class="col-md-9">
+							<div class="col-md-5">
 								<div class="breadcrumbs">
 									<a href="#" id="home">Home</a>
 									<a href="#" id="detailMovieMenu" style="visibility: hidden;">Detail Movie</a>
 								</div>
 								</span>
 							</div>
-								<div class="col-md-3">
-									<div class="breadcrumbs">
-										<a><span>Ovo Balance : Rp. <span id="balanceOvo"></span></a>
-									</div>
-
-								</span>
+							<div class="col-md-3">
+									Region : <span class="regionID"><a href="#" >ID</a></span> | <span class="regionGlobal"><a href="#" >Global</a></span>
+							</div>
+							<div class="col-md-1">
+								<a id="historyTrx" href="#"><span  style="color: green">History</span> </a>
+							</div>
+							<div class="col-md-3">
+									<span>Ovo Balance : Rp. <span id="balanceOvo"></span></span>
 							</div>
 						</div>
 
@@ -92,6 +94,10 @@
 										</div>
 									</div>
 								</div>
+								<div style="padding: 0px 20px 0px 20px">
+									<div id="historyRender" style="display:none" class="content">
+									</div>
+								</div>
 
 							</div>
 						</div>
@@ -105,6 +111,8 @@
 		<script src="js/plugins.js"></script>
 		<script src="js/app.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
+
 
 		<script>
 
@@ -115,17 +123,21 @@
 		  var globalPage = 0;
 		  var globalUrl = window.location.href;
 		  var key = 'd85fc1ea26d9a03832fb3a7961ac2be1';
+		  var globalRegion = 'ID';
 
 			$(document).ready(function() { // default page 1, initial when browser open or when page loaded
-				getMovie(1); //default to page 1
 				globalPage = 2; //set globalPage define to page 2, so next call api to page 2
 				var originalUrl = localStorage.getItem("originalUrl"); // save original ulr for next in localStorage
 				var initialBalance = localStorage.getItem("balance") ? localStorage.getItem("balance") : 100000;
+				var originalRegion = localStorage.getItem("region"); // save original ulr for next in localStorage
 				history.pushState(null, null, originalUrl);
 				localStorage.setItem("originalUrl", window.location.href);
 				localStorage.setItem("balance", initialBalance);
 				var getInitialBalance = localStorage.getItem("balance");
 				updateBalance(getInitialBalance);
+				globalRegion = originalRegion ? originalRegion : 'ID';
+				updateRegion(globalRegion);
+				getMovie(1); //default to page 1
 			});
 
 
@@ -152,9 +164,10 @@
 			}
 
 		  function getMovie (page, clear) { // get movie by page
+				var reg = globalRegion === 'ID' ? '&region=ID' : '';
 		    $.ajax({
 		      method: "GET",
-		      url: 'https://api.themoviedb.org/3/movie/now_playing?api_key='+key+'&language=en-US&page='+page+'&region=ID',
+		      url: 'https://api.themoviedb.org/3/movie/now_playing?api_key='+key+'&language=en-US&page='+page+reg,
 		      data: {}
 		    }).done(function( msg ) {
 		      if(clear) $("#movieDetailRender").css("display", "none");
@@ -241,6 +254,7 @@
 		  }
 
 			function renderMovie (data, key, type, status) { //render movie list
+			$("#historyRender").empty();
 				if(status === 'nothing') {
 					var renderMovie = '<p>Nothing to show</p>'
 					$("#"+type).append(renderMovie);
@@ -278,6 +292,7 @@
 
 		  function renderDetailMovie (data) { //render detail movie
 				$("#detailMovieMenu").css('visibility', 'visible');
+				$("#historyRender").empty();
 				var genre = '';
 				var linkImg ='https://image.tmdb.org/t/p/w370_and_h556_bestv2/'+data.poster_path;
 				var checkPurchase = checkOwnedMovie(data.id); // belum pernah beli
@@ -329,14 +344,63 @@
 					$("#ownedSpanDetail").css({"color": "green"});
 					$("#buyMovie").attr('disabled', true);
 					updateBalance(newBalance);
+					updateHistory();
 					alert('Payment success, your balance now Rp. ' + formatPrice(newBalance))
 				} else {
 					alert('You have buy this movie')
 				}
 			}
 
+			function isEmpty(obj) {
+				if(obj) {
+					return Object.keys(obj).length === 0
+				} else {
+					return false
+				};
+			}
+
+			function updateHistory() {
+				var dataTrx = localStorage.getItem("historyTrx") ? localStorage.getItem("historyTrx") : {};
+
+				var id = $("#movie-id-detail").text();
+				var title = $("#movie-title-detail").text();
+				var price = $("#movie-price-detail").text();
+
+				if(!isEmpty(dataTrx)) {
+					dataTrx = JSON.parse(dataTrx);
+					var m = [...dataTrx, {
+						id: id,
+						title: title,
+						price: price,
+						time: new Date(),
+					}];
+				} else {
+					var m = [{
+						id: id,
+						title: title,
+						price: price,
+						time: new Date(),
+
+					}]
+				};
+
+				localStorage.setItem('historyTrx', JSON.stringify(m));
+			}
+
 			function formatPrice (price) {
 				return String(price).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+
+			function updateRegion (clicked) {
+				if(clicked === 'Global') {
+					$(".regionGlobal").children('a').css('color', 'red');
+					$(".regionID").children('a').css('color', 'black');
+				} else {
+					$(".regionID").children('a').css('color', 'red');
+					$(".regionGlobal").children('a').css('color', 'black');
+				}
+				globalRegion = clicked;
+				localStorage.setItem("region", clicked);
 			}
 
 // =================================
@@ -352,6 +416,51 @@
 		    getMovie(1, true);
 				$("#detailMovieMenu").css('visibility', 'hidden');
 		  });
+
+		  $( ".regionID, .regionGlobal" ).on("click", function() {
+				var clicked = $(this).text();
+				updateRegion(clicked);
+				getMovie(1, true);
+		  });
+
+		  $( "#historyTrx" ).on("click", function() {
+				localStorage.setItem("stateScreen", "history");
+				$("#historyRender").empty();
+				$("#historyRender").css('display', 'block');
+				$("#movieListRender").css('display', 'none');
+				$("#movieDetailRender").css('display', 'none');
+				var data = JSON.parse(localStorage.getItem("historyTrx"))
+				data = data ? data : {};
+				if(isEmpty(data)) {
+					$("#historyRender").append(
+						'<p><h1> History Payment </h1></p>'+
+						'<div style="height: 800px">'+
+							'<p>History tidak ditemukan</p>'+
+						'</div>'
+					);
+				}else{
+					$("#historyRender").append(
+						'<div><p><h1> History Payment </h1></p></div>'
+					);
+					data.forEach(renderHistory);
+					$("#historyRender").append(
+						'<div style="height: 500px">'+
+						'</div>'
+					);
+				}
+				// !isEmpty(data) ? data.forEach(renderHistory) : '';
+		  });
+
+			function renderHistory (data) {
+				$("#historyRender").append(
+					'<div style="border: 1px solid grey;margin-bottom: 10px; padding: 20px; border-radius: 10px">'+
+						'<p> <b>Title :</b> '+data.title+'</p>'+
+						'<p> <b>Price :</b> Rp. '+data.price+'</p>'+
+						'<p> <b>Time :</b> '+moment(data.time).format('MMMM Do YYYY, h:mm:ss a')+'</p>'+
+					'</div>'
+				);
+
+			}
 
 			$( "#buyMovie" ).on("click", function() {
 				var getInitialBalance = localStorage.getItem("balance");
