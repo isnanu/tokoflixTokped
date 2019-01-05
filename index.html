@@ -27,15 +27,25 @@
 				</div>
 			</header>
 			<main class="main-content">
-				<div class="container">
+				<div id="loading" style="visibility:visible; height:500px; width:500px; padding-left: 20%;display: none"><img src="./loading.gif"></div>
+				<div class="container" id="render">
 					<div class="page">
-							<span>
-								Ovo Balance : Rp. <span id="balanceOvo"></span>
-							</span>
-							<div class="breadcrumbs">
-								<!-- <a href="#" id="home">Home</a> -->
-								<!-- <a href="#" id="detailTitle" >Movie Detail</a> -->
+						<div class="row">
+							<div class="col-md-9">
+								<div class="breadcrumbs">
+									<a href="#" id="home">Home</a>
+									<a href="#" id="detailMovieMenu" style="visibility: hidden;">Detail Movie</a>
+								</div>
+								</span>
 							</div>
+								<div class="col-md-3">
+									<div class="breadcrumbs">
+										<a><span>Ovo Balance : Rp. <span id="balanceOvo"></span></a>
+									</div>
+
+								</span>
+							</div>
+						</div>
 
 						<div class="movie-list">
 							<div id="render">
@@ -45,10 +55,11 @@
 								<div id="movieDetailRender" style="display:none" class="content">
 									<div class="row">
 										<div class="col-md-6">
-											<figure class="movie-poster"><img src="dummy/single-image.jpg" alt="#"></figure>
+											<figure class="movie-poster"><img src="dummy/single-image.jpg" alt="#" id="img-poster-detail"></figure>
 										</div>
 										<div class="col-md-6">
 											<h2 class="movie-title" id="movie-title-detail"></h2>
+											<p><span id="ownedSpanDetail" style="padding-bottom: 20px"></span><p>
 											<div class="movie-summary" id="movie-summary-detail"> </div>
 											<ul class="movie-meta">
 												<li><strong>Rating:</strong>
@@ -58,6 +69,7 @@
 												<li><strong>Length:</strong> <span id="movie-min-detail"></span></li>
 												<li><strong>Release:</strong> <span id="movie-release-detail"></span></li>
 												<li><strong>Genre:</strong> <span id="movie-genre-detail"></span></li>
+												<li><strong>Casts:</strong> <span id="movie-kru-detail"></span></li>
 												<li><strong>Price:</strong><span> Rp.<span> <span id="movie-price-detail"></span></li>
 											</ul>
 											<ul class="movie-meta">
@@ -65,24 +77,24 @@
 											</ul>
 										</div>
 									</div> <!-- .row -->
-									<div> <!-- recomended div here -->
-										<div class="entry-content">
-											<h1> Rekomendasi </h1>
+									<div class="row" style="margin: 0px 20px 0px 20px"> <!-- recomended div here -->
+										<div>
+											<p><h1> Rekomendasi </h1></p>
 											<div id="rekomendasi">
 											</div>
 										</div>
 									</div>
-									<div> <!-- serupa div here -->
-										<div class="entry-content">
-											<h1> Serupa </h1>
+									<div class="row" style="margin: 0px 20px 0px 20px"> <!-- serupa div here -->
+										<div>
+											<p><h1> Serupa </h1></p>
 											<div id="serupa">
 											</div>
 										</div>
 									</div>
 								</div>
 
-							</div> <!-- .movie-list -->
-						</div> <!-- .movie-list -->
+							</div>
+						</div>
 					</div>
 				</div> <!-- .container -->
 			</main>
@@ -95,14 +107,19 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
 		<script>
+
+// =====================================
+// ======== initialization Here ========
+// =====================================
+
 		  var globalPage = 0;
 		  var globalUrl = window.location.href;
 		  var key = 'd85fc1ea26d9a03832fb3a7961ac2be1';
 
-			$(document).ready(function() { // default page 1, initialize
-				getMovie(1);
-				globalPage = 2;
-				var originalUrl = localStorage.getItem("originalUrl");
+			$(document).ready(function() { // default page 1, initial when browser open or when page loaded
+				getMovie(1); //default to page 1
+				globalPage = 2; //set globalPage define to page 2, so next call api to page 2
+				var originalUrl = localStorage.getItem("originalUrl"); // save original ulr for next in localStorage
 				var initialBalance = localStorage.getItem("balance") ? localStorage.getItem("balance") : 100000;
 				history.pushState(null, null, originalUrl);
 				localStorage.setItem("originalUrl", window.location.href);
@@ -111,9 +128,10 @@
 				updateBalance(getInitialBalance);
 			});
 
-// ===============================
-// ======== Function Here ========
-// ===============================
+
+// ====================================
+// ======== Some Function Here ========
+// ====================================
 
 			function updateBalance(balance) {
 				$("#balanceOvo").text(formatPrice(balance));
@@ -136,7 +154,7 @@
 		  function getMovie (page, clear) { // get movie by page
 		    $.ajax({
 		      method: "GET",
-		      url: 'https://api.themoviedb.org/3/movie/now_playing?api_key='+key+'&language=en-US&page='+page,
+		      url: 'https://api.themoviedb.org/3/movie/now_playing?api_key='+key+'&language=en-US&page='+page+'&region=ID',
 		      data: {}
 		    }).done(function( msg ) {
 		      if(clear) $("#movieDetailRender").css("display", "none");
@@ -153,6 +171,7 @@
 		  }
 
 		  function detailMovie (clickId) { // go to detail movie
+				loading('start');
 		    $.ajax({
 		      method: "GET",
 		      url: "https://api.themoviedb.org/3/movie/"+clickId+"?api_key="+key+"&language=en-US",
@@ -169,43 +188,85 @@
 					otherMovie(serupaUrl, "serupa");
 					var originalUrl = localStorage.getItem("originalUrl");
 					history.pushState(null, null, originalUrl+'?'+clickId+'-'+slug);
+					loading('end');
 		    });
 		  }
 
+			function loading (status) { // function for manipulated page (when ajax onprocess)
+				if(status ==='start'){
+					$("body").css("overflow", "hidden");
+					$("#site-content").css('visibility', 'hidden');
+					$("#loading").css({'visibility':'visible', "display":"block"});
+				}else{
+					$("body").css("overflow", "scroll");
+					$("#site-content").css('visibility', 'visible');
+					$("#loading").css({'visibility':'hidden', "display":"none"});
+				}
+			}
+
 		  function otherMovie (url, type) { // go to detail movie
+				loading('start');
 		    $.ajax({
 		      method: "GET",
 		      url: url,
 		      data: {}
 		    }).done(function( msg ) {
-					$.each(msg.results, function( index, value ) {
-						renderMovie(value, index, type);
-					});
+					if(msg.results.length > 1) {
+						$.each(msg.results, function( index, value ) {
+							renderMovie(value, index, type);
+						});
+					}else {
+						renderMovie([], '', type, 'nothing');
+					}
+					loading('end');
 		    });
 		  }
 
-			function renderMovie (data, key, type) { //render movie list
-				var maxLoad = (type !== "movieListRender") ? 4 : 100;
-				var rating = parseFloat(data.vote_average);
-				var checIsOwned = !checkOwnedMovie(data.id) ? 'block' : 'none';
-					if(key < maxLoad){
-						var linkImg ='https://api.themoviedb.org/3/movie/'+data.id+'/images?api_key='+key+'&language=en-US';
-						var renderMovie =
-							'<div class="movie" id="movieListRender">'+
-								'<figure class="movie-poster">'+
-								'<img src="images/logo.png" alt="Movie Image">'+
-									// '<img src="'+linkImg+'" alt="Movie Image">'+
-								'</figure>'+
-								'<div class="movie-title">'+
-									'<a href="#">'+data.original_title+
-										'<span style="display: none;">'+data.id+'</span>'+
-									'</a><span style="font-size: 15px; color: red; display:'+checIsOwned+'"> owned</span>'+
-								'</div>'+
-								'<p>'+data.overview.substring(0, 100)+'</p>'+
-								'<p> Price : Rp. '+generatePrice(rating)+'</p>'+
-							'</div>';
-						var render = String('"#'+type+'"');
-						$("#"+type).append(renderMovie);
+		  function renderKru (id) { // go to detail movie
+				loading('start');
+		    $.ajax({
+		      method: "GET",
+		      url: "https://api.themoviedb.org/3/movie/"+id+"/credits?api_key="+key,
+		      data: {}
+		    }).done(function( msg ) {
+						var renderKru = '';
+
+						$.each(msg.cast, function( k, value ) {
+							renderKru = renderKru + ((k === 0 ) ? '': ' - ') + value.name;
+						});
+
+						$("#movie-kru-detail").text(renderKru);
+						loading('end');
+		    });
+		  }
+
+			function renderMovie (data, key, type, status) { //render movie list
+				if(status === 'nothing') {
+					var renderMovie = '<p>Nothing to show</p>'
+					$("#"+type).append(renderMovie);
+				}else {
+					var maxLoad = (type !== "movieListRender") ? 4 : 100;
+					var rating = parseFloat(data.vote_average);
+					var checIsOwned = !checkOwnedMovie(data.id) ? 'owned' : 'not owned';
+					var ownedColor = !checkOwnedMovie(data.id) ? 'green' : 'red';
+						if(key < maxLoad){
+							var linkImg ='https://image.tmdb.org/t/p/w370_and_h556_bestv2/'+data.poster_path;
+							var renderMovie =
+								'<div class="movie" id="movieListRender">'+
+									'<figure class="movie-poster">'+
+										'<img src="'+linkImg+'" alt="Movie Image">'+
+									'</figure>'+
+									'<div class="movie-title">'+
+										'<a href="#">'+data.original_title+
+											'<span style="display: none;">'+data.id+'</span>'+
+										'</a><span style="font-size: 15px; color: '+ownedColor+'; display:block"> '+checIsOwned+'</span>'+
+									'</div>'+
+									'<p>'+data.overview.substring(0, 100)+'...</p>'+
+									'<p> Price : Rp. '+generatePrice(rating)+'</p>'+
+								'</div>';
+							var render = String('"#'+type+'"');
+							$("#"+type).append(renderMovie);
+						}
 					}
 			}
 
@@ -216,7 +277,11 @@
 			}
 
 		  function renderDetailMovie (data) { //render detail movie
+				$("#detailMovieMenu").css('visibility', 'visible');
 				var genre = '';
+				var linkImg ='https://image.tmdb.org/t/p/w370_and_h556_bestv2/'+data.poster_path;
+				var checkPurchase = checkOwnedMovie(data.id); // belum pernah beli
+				renderKru(data.id);
 				localStorage.setItem("stateScreen", "detail");
 				$("#movieListRender").css("display", "none");
 				$("#movieDetailRender").css("display", "block");
@@ -228,7 +293,13 @@
 				$("#movie-min-detail").text( data.runtime + " min");
 				$("#movie-release-detail").text(data.release_date);
 				$("#movie-price-detail").text(generatePrice(parseFloat(data.vote_average)));
+				$("#img-poster-detail").attr("src",linkImg);
+				$("#ownedSpanDetail").text(checkPurchase ? 'not owned' : 'owned');
+				$("#ownedSpanDetail").css({"color": checkPurchase ? 'red' : 'green'});
+				$("#buyMovie").attr('disabled', !checkPurchase);
+
 				(data.genres).forEach(getGenre);
+
 				function getGenre (val, k) {
 					genre =  genre + ((k === 0 ) ? '': ' /') + val.name ;
 				}
@@ -254,6 +325,9 @@
 					var newPurchase = [purchaseMovie, id];
 					localStorage.setItem("balance", newBalance);
 					localStorage.setItem("purchaseMovie", newPurchase);
+					$("#ownedSpanDetail").text('owned');
+					$("#ownedSpanDetail").css({"color": "green"});
+					$("#buyMovie").attr('disabled', true);
 					updateBalance(newBalance);
 					alert('Payment success, your balance now Rp. ' + formatPrice(newBalance))
 				} else {
@@ -269,22 +343,14 @@
 // ======== On click ennevt ========
 // =================================
 
-		  $( "#movieListRender" ).on("click", "a", function() {
+		  $( "#movieListRender, #movieDetailRender" ).on("click", "a", function() {
 		    var clickId = $(this).children('span').text();
 		    detailMovie(clickId);
 		  });
 
-			$( "#movieDetailRender" ).on("click", "a", function() {
-		    var clickId = $(this).children('span').text();
-		    detailMovie(clickId);
-		  });
-
-		  $( "#home" ).on("click", function() {
+		  $( "#home, #branding" ).on("click", function() {
 		    getMovie(1, true);
-		  });
-
-		  $( "#branding" ).on("click", function() {
-		    getMovie(1, true);
+				$("#detailMovieMenu").css('visibility', 'hidden');
 		  });
 
 			$( "#buyMovie" ).on("click", function() {
