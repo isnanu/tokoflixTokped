@@ -181,6 +181,7 @@
 					localStorage.setItem("stateScreen", "list");
 					var originalUrl = localStorage.getItem("originalUrl");
 					history.pushState(null, null, originalUrl+'?movieListPage='+page);
+					loading('end');
 		    });
 		  }
 
