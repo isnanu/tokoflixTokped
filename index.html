@@ -126,6 +126,7 @@
 		  var globalRegion = 'ID';
 
 			$(document).ready(function() { // default page 1, initial when browser open or when page loaded
+				loading('start');
 				globalPage = 2; //set globalPage define to page 2, so next call api to page 2
 				var originalUrl = localStorage.getItem("originalUrl"); // save original ulr for next in localStorage
 				var initialBalance = localStorage.getItem("balance") ? localStorage.getItem("balance") : 100000;
@@ -138,6 +139,7 @@
 				globalRegion = originalRegion ? originalRegion : 'ID';
 				updateRegion(globalRegion);
 				getMovie(1); //default to page 1
+				loading('end');
 			});
 
 
