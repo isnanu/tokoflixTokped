@@ -403,6 +403,7 @@
 					$(".regionGlobal").children('a').css('color', 'black');
 				}
 				globalRegion = clicked;
+				globalPage = 2;
 				localStorage.setItem("region", clicked);
 			}
 
@@ -416,17 +417,22 @@
 		  });
 
 		  $( "#home, #branding" ).on("click", function() {
+				globalPage = 2;
 		    getMovie(1, true);
 				$("#detailMovieMenu").css('visibility', 'hidden');
 		  });
 
 		  $( ".regionID, .regionGlobal" ).on("click", function() {
+				$("#detailMovieMenu").css('visibility', 'hidden');
 				var clicked = $(this).text();
 				updateRegion(clicked);
 				getMovie(1, true);
 		  });
 
 		  $( "#historyTrx" ).on("click", function() {
+				var originalUrl = localStorage.getItem("originalUrl"); // save original ulr for next in localStorage
+				history.pushState(null, null, originalUrl+'?history');
+				$("#detailMovieMenu").css('visibility', 'hidden');
 				localStorage.setItem("stateScreen", "history");
 				$("#historyRender").empty();
 				$("#historyRender").css('display', 'block');
