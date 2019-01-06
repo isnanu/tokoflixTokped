@@ -57,7 +57,7 @@
 								<div id="movieDetailRender" style="display:none" class="content">
 									<div class="row">
 										<div class="col-md-6">
-											<figure class="movie-poster"><img src="dummy/single-image.jpg" alt="#" id="img-poster-detail"></figure>
+											<figure class="movie-poster"><img src="" alt="#" id="img-poster-detail"></figure>
 										</div>
 										<div class="col-md-6">
 											<h2 class="movie-title" id="movie-title-detail"></h2>
@@ -309,6 +309,7 @@
 				$("#movie-release-detail").text(data.release_date);
 				$("#movie-price-detail").text(generatePrice(parseFloat(data.vote_average)));
 				$("#img-poster-detail").attr("src",linkImg);
+				$("#img-poster-detail").css({"height": "80%", "width": "80%"});
 				$("#ownedSpanDetail").text(checkPurchase ? 'not owned' : 'owned');
 				$("#ownedSpanDetail").css({"color": checkPurchase ? 'red' : 'green'});
 				$("#buyMovie").attr('disabled', !checkPurchase);
